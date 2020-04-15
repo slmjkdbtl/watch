@@ -8,6 +8,20 @@ $ watch
 
 will search for a `Watchfile` and run tasks defined in the file.
 
+## installation
+
+on macOS:
+
+```sh
+$ brew install slmjkdbtl/formulae/watch
+```
+
+or clone this repo and
+
+```sh
+$ cargo install --force --path .
+```
+
 ## syntax
 
 the basic syntax is similar to a `Makefile`:
@@ -44,7 +58,6 @@ Options:
   -t, --time        set check interval (ms)
   --help            display usage information
 ```
-
 
 ## misc
 inspired by [just](https://github.com/casey/just)
