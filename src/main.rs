@@ -17,9 +17,10 @@ struct Opt {
 
 fn main() {
 
+	let opt = argh::from_env::<Opt>();
+
 	if let Ok(content) = std::fs::read_to_string("Watchfile") {
 
-		let opt = argh::from_env::<Opt>();
 		let mut watcher = Watcher::from_watchfile(&content).unwrap();
 		let time = opt.time.unwrap_or(100);
 
