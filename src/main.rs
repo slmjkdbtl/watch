@@ -8,10 +8,10 @@ use argh::FromArgs;
 use watch::*;
 
 #[derive(FromArgs)]
-/// pack a binary to a MacOS .app bundle
+/// watch files and execute commands
 struct Opt {
 	#[argh(option, short = 't')]
-	/// check interval in ms
+	/// set check interval (ms)
 	time: Option<u64>,
 }
 
