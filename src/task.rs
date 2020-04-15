@@ -6,6 +6,8 @@ use std::time::SystemTime;
 use std::collections::HashMap;
 use std::process::Command;
 
+use super::term::style as s;
+
 pub struct Task {
 	buffer: HashMap<PathBuf, Option<SystemTime>>,
 	pat: String,
@@ -38,11 +40,16 @@ impl Task {
 
 				if &modified != last_modified {
 
+					println!(
+						"{}\n-> {}",
+						s(&format!("{}", path.display())).yellow().bold(),
+						s(&self.cmd).blue()
+					);
+
 					let mut env = HashMap::new();
+					let mut cmd = self.cmd.clone();
 
 					env.insert("FILE", format!("{}", path.display()));
-
-					let mut cmd = self.cmd.clone();
 
 					for (k, v) in env {
 						cmd = cmd.replace(&format!("$({})", k), &v);
