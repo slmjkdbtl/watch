@@ -42,7 +42,7 @@ src/*.rs:
 core/*.bf:
 	echo $(FILE)
 
-# run webpack everytime a `.rs` file at any level under `src/` changes
+# run webpack everytime a `.js` file at any level under `src/` changes
 scripts/**/*.js:
 	webpack -p scripts/main.js -o dist/scripts/main.js
 ```
@@ -60,5 +60,6 @@ Options:
 ```
 
 ## misc
+
 inspired by [just](https://github.com/casey/just)
 
