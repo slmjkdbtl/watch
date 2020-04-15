@@ -1,0 +1,8 @@
+# wengwengweng
+
+src/**/*.rs:
+	echo $(FILE)
+
+src/*.rs:
+	echo 123
+
