@@ -13,6 +13,7 @@ macro_rules! ansi {
 	({$($name:ident => $code:expr),*$(,)?}) => {
 		impl StyledOutput {
 			$(
+				#[allow(dead_code)]
 				pub fn $name(mut self) -> Self {
 					self.text = ansi_wrap(&self.text, $code);
 					return self;

@@ -1,27 +1,37 @@
 // wengwengweng
 
+use std::fs;
+use std::path::PathBuf;
+use std::path::Path;
+
 use crate::*;
 
 pub struct Watcher {
 	tasks: Vec<Task>,
+	path: PathBuf,
 }
 
 impl Watcher {
 
-	pub fn new() -> Self {
+	pub fn new(p: impl AsRef<Path>) -> Self {
 		return Self {
 			tasks: vec![],
+			path: p.as_ref().to_path_buf(),
 		};
 	}
 
-	pub fn from_watchfile(content: &str) -> Result<Self, String> {
+	pub fn from_watchfile(path: impl AsRef<Path>) -> Result<Self, String> {
 
-		let rules = parser::parse_watchfile(content)
-			.map_err(|_| format!("failed to parse Watchfile"))?;
-		let mut watcher = Self::new();
+		let fpath = path.as_ref();
+		let path = fpath.parent().ok_or(format!("invalid path {}", fpath.display()))?;
+		let content = fs::read_to_string(&fpath)
+			.map_err(|_| format!("failed to read {}", fpath.display()))?;
+		let rules = parser::parse_watchfile(&content)
+			.map_err(|_| format!("failed to parse {}", fpath.display()))?;
+		let mut watcher = Self::new(&path);
 
 		for r in rules {
-			watcher.add_task(Task::new(&r.pat, &r.cmd)?);
+			watcher.add_task(Task::new(&r.pat, &r.cmd, &path)?);
 		}
 
 		return Ok(watcher);

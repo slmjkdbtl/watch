@@ -9,26 +9,28 @@ use std::process::Command;
 use super::term::style as s;
 
 pub struct Task {
-	buffer: HashMap<PathBuf, Option<SystemTime>>,
+	states: HashMap<PathBuf, Option<SystemTime>>,
 	pat: String,
 	cmd: String,
+	path: PathBuf,
 }
 
 impl Task {
 
-	pub fn new(pat: &str, cmd: &str) -> Result<Self, String> {
+	pub fn new(pat: &str, cmd: &str, path: impl AsRef<Path>) -> Result<Self, String> {
 
 		return Ok(Self {
-			buffer: HashMap::new(),
+			states: HashMap::new(),
 			pat: pat.to_string(),
 			cmd: cmd.to_string(),
+			path: path.as_ref().to_path_buf(),
 		});
 
 	}
 
 	pub fn tick(&mut self) -> Result<(), String> {
 
-		let entries = glob::glob(&self.pat)
+		let entries = glob::glob(&format!("{}", self.path.join(&self.pat).display()))
 			.map_err(|_| format!("failed to parse pattern"))?
 			.flatten();
 
@@ -36,13 +38,15 @@ impl Task {
 
 			let modified = get_last_modified(&path);
 
-			if let Some(last_modified) = self.buffer.get_mut(&path) {
+			if let Some(last_modified) = self.states.get_mut(&path) {
 
 				if &modified != last_modified {
 
+					let cpath = format!("{}", path.display()).replace(&format!("{}", self.path.display()), "");
+
 					println!(
 						"{}\n-> {}",
-						s(&format!("{}", path.display())).yellow().bold(),
+						s(&cpath).yellow().bold(),
 						s(&self.cmd).blue()
 					);
 
@@ -66,13 +70,13 @@ impl Task {
 
 			} else {
 
-				self.buffer.insert(path, modified);
+				self.states.insert(path, modified);
 
 			}
 
 		}
 
-		// TODO: remove buffered entry that doesn't exist on disk anymore
+		// TODO: remove saved entry that doesn't exist on disk anymore
 
 		return Ok(());
 
