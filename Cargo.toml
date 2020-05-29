@@ -4,12 +4,11 @@
 name = "watch"
 description = "watch files and execute commands"
 version = "0.0.0"
-authors = ["tga <tga@wengwengweng.me>"]
-repository = "https://github.com/slmjkdbtl/watch"
+authors = ["tga <tga@enemyspy.xyz>"]
+repository = "https://git.sr.ht/~slmjkdbtl/watch"
 license = "Zlib"
 edition = "2018"
 readme = "README.md"
-exclude = ["TODO"]
 
 [dependencies]
 glob = "0.3"
